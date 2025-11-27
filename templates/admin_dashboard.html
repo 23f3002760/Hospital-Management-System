@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4 text-primary fw-bold">Admin Dashboard</h2>
+
+    <!-- Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white mb-3">
+                <div class="card-body">
+                    <h3 class="card-title display-4 fw-bold">{{ doctors|length }}</h3>
+                    <p class="card-text opacity-75">Doctors</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white mb-3">
+                <div class="card-body">
+                    <h3 class="card-title display-4 fw-bold">{{ patients|length }}</h3>
+                    <p class="card-text opacity-75">Patients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark text-white mb-3">
+                <div class="card-body">
+                    <h3 class="card-title display-4 fw-bold">{{ total_appointments }}</h3>
+                    <p class="card-text opacity-75">Appointments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Doctor Form -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light border-0">
+            <h5 class="mb-0 text-primary fw-bold">Add New Doctor</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('add_doctor') }}">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input type="text" name="username" class="form-control" placeholder="Doctor Name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="department_id" class="form-select" required>
+                            <option value="" disabled selected>Specialization</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctors List -->
+    <h5 class="mb-3 text-muted fw-bold">Registered Doctors</h5>
+    <div class="table-responsive mb-4">
+        <table class="table table-hover border align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td class="fw-bold text-primary">Dr. {{ doctor.username }}</td>
+                    <td>{{ doctor.email }}</td>
+                    <td><span class="badge bg-light text-dark border">{{ doctor.department.name if doctor.department else 'Unassigned' }}</span></td>
+                    <td>
+                        <a href="{{ url_for('delete_user', user_id=doctor.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to remove this doctor?')">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

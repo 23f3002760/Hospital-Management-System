@@ -1,0 +1,92 @@
+:root {
+    --brand-blue:   #005D8E;
+    --brand-green:  #00A651;
+    --brand-dark:   #2c3e50;
+    --bg-soft:      #f4f7f6;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background-color: var(--bg-soft);
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6,
+.btn,
+.navbar-brand,
+.nav-link {
+    font-family: "Montserrat", sans-serif;
+}
+
+/* ======= NAVBAR ======= */
+.navbar {
+    background-color: white !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.brand-sterling {
+    font-family: "Noto Serif", serif;
+    color: var(--brand-blue);
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+}
+
+.brand-hospitals {
+    font-family: "Montserrat", sans-serif;
+    color: var(--brand-green);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 5px;
+    padding-top: 5px;
+}
+
+.nav-link {
+    color: var(--brand-dark) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 15px;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--brand-blue) !important;
+}
+
+/* Logout hover keep white */
+.btn-danger:hover {
+    color: #fff !important;
+}
+
+.btn-primary,
+.bg-primary {
+    background-color: var(--brand-blue) !important;
+    border-color: var(--brand-blue) !important;
+}
+
+.btn-success,
+.bg-success {
+    background-color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+footer {
+    background-color: white;
+    border-top: 1px solid #eee;
+    font-family: "Montserrat", sans-serif;
+}
