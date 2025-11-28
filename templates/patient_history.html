@@ -5,16 +5,24 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             
-            <!-- Navigation -->
             <div class="mb-3">
-                <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-muted fw-bold small"> &larr; Back to Dashboard
-                </a>
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% elif current_user.role == 'doctor' %}
+                    <a href="{{ url_for('doctor_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('patient_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% endif %}
             </div>
 
-            <!-- Main Card -->
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 
-                <!-- Header -->
                 <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="mb-1 fw-bold">Patient Medical History</h3>
@@ -29,7 +37,6 @@
 
                 <div class="card-body p-4 bg-white">
                     
-                    <!-- Patient Details Section -->
                     <div class="card bg-light border-0 rounded-3 mb-4">
                         <div class="card-body p-4">
                             <div class="row g-3">
@@ -49,7 +56,6 @@
                         </div>
                     </div>
 
-                    <!-- History Table -->
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
@@ -85,7 +91,6 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-end">
-                                        <!-- FIXED: Use text-white for solid badges to ensure visibility -->
                                         {% if appointment.status == 'Completed' %}
                                             <span class="badge bg-success text-white rounded-pill px-3 py-2">Completed</span>
                                         {% elif appointment.status == 'Cancelled' %}
@@ -106,10 +111,8 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
                 
-                <!-- Footer -->
                 <div class="card-footer bg-light text-center py-3 border-0">
                     <small class="text-muted">Confidential Medical Record • Authorized Personnel Only</small>
                 </div>

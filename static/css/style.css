@@ -1,14 +1,13 @@
 :root {
-    /* Updated Colors per Request */
-    --brand-blue:   #0974A7;  /* New Professional Blue */
-    --brand-dark-blue: #015890; /* For Hover States */
-    --brand-green:  #00B06F;  /* New Professional Green */
+    /* Original Colors Preserved */
+    --brand-blue:   #0974A7;
+    --brand-dark-blue: #015890;
+    --brand-green:  #00B06F;
     
     --brand-dark:   #2c3e50;
     --bg-soft:      #f4f7f6;
     
-    /* New Edit Button Color - Using a neutral/light primary */
-    --brand-edit: #FAD10A; /* A clean, modern yellow */ 
+    --brand-edit: #FAD10A;
 }
 
 body {
@@ -37,10 +36,9 @@ h1, h2, h3, h4, h5, h6,
     text-decoration: none;
 }
 
-/* Logo Text Styles */
 .brand-sterling {
     font-family: "Noto Serif", serif;
-    color: var(--brand-blue); /* Uses the new #0974A7 */
+    color: var(--brand-blue);
     font-weight: 700;
     font-size: 1.8rem;
     letter-spacing: -0.5px;
@@ -48,7 +46,7 @@ h1, h2, h3, h4, h5, h6,
 
 .brand-hospitals {
     font-family: "Montserrat", sans-serif;
-    color: var(--brand-green); /* Uses the new #00B06F */
+    color: var(--brand-green);
     font-weight: 600;
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -57,7 +55,6 @@ h1, h2, h3, h4, h5, h6,
     padding-top: 5px;
 }
 
-/* Navigation Links */
 .nav-link {
     color: var(--brand-dark) !important;
     font-weight: 600;
@@ -72,7 +69,6 @@ h1, h2, h3, h4, h5, h6,
 
 /* ======= BUTTONS & THEME OVERRIDES ======= */
 
-/* Logout hover keep white */
 .btn-danger:hover {
     color: #fff !important;
 }
@@ -82,6 +78,7 @@ h1, h2, h3, h4, h5, h6,
 .bg-primary {
     background-color: var(--brand-blue) !important;
     border-color: var(--brand-blue) !important;
+    color: #fff !important; /* Added to fix dark text on blue button */
 }
 
 .btn-primary:hover {
@@ -108,10 +105,11 @@ h1, h2, h3, h4, h5, h6,
 .bg-success {
     background-color: var(--brand-green) !important;
     border-color: var(--brand-green) !important;
+    color: #fff !important; /* Added to ensure readability */
 }
 
 .btn-success:hover {
-    background-color: #008f5a !important; /* Slightly darker shade */
+    background-color: #008f5a !important;
     border-color: #008f5a !important;
 }
 
@@ -119,17 +117,7 @@ h1, h2, h3, h4, h5, h6,
     color: var(--brand-green) !important;
 }
 
-.btn-outline-success {
-    color: var(--brand-green);
-    border-color: var(--brand-green);
-}
-
-.btn-outline-success:hover {
-    background-color: var(--brand-green);
-    color: white;
-}
-
-/* Custom Edit Button (Yellow/Warning replacement) */
+/* Edit Button */
 .btn-edit {
     color: var(--brand-dark);
     background-color: var(--brand-edit);
@@ -137,7 +125,7 @@ h1, h2, h3, h4, h5, h6,
 }
 .btn-edit:hover {
     color: var(--brand-dark);
-    background-color: #d8b209; /* Darker edit yellow on hover */
+    background-color: #d8b209;
     border-color: #d8b209;
 }
 
@@ -153,4 +141,42 @@ footer {
     background-color: white;
     border-top: 1px solid #eee;
     font-family: "Montserrat", sans-serif;
+}
+
+/* ======= DOCTOR AVAILABILITY TOGGLES ======= */
+
+/* Success/Morning Toggle */
+.btn-outline-success {
+    color: var(--brand-green);
+    border-color: var(--brand-green);
+}
+
+.btn-outline-success:hover {
+    background-color: #e6fffa !important;
+    color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.btn-check:checked + .btn-outline-success {
+    background-color: var(--brand-green) !important;
+    color: white !important;
+    border-color: var(--brand-green) !important;
+}
+
+/* Evening/Blue Toggle */
+.btn-outline-evening {
+    color: var(--brand-dark-blue);
+    border-color: var(--brand-dark-blue);
+}
+
+.btn-outline-evening:hover {
+    background-color: #e3f2fd !important;
+    color: var(--brand-dark-blue) !important;
+    border-color: var(--brand-dark-blue) !important;
+}
+
+.btn-check:checked + .btn-outline-evening {
+    background-color: var(--brand-dark-blue) !important;
+    color: white !important;
+    border-color: var(--brand-dark-blue) !important;
 }

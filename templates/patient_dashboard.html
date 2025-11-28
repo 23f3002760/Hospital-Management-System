@@ -2,35 +2,29 @@
 
 {% block content %}
 <div class="container">
-    <!-- Heading with Sterling Green (text-success) and Montserrat Font -->
     <h2 class="mb-4 text-success fw-bold">My Health Dashboard</h2>
     
-    <!-- Welcome Message -->
-    <div class="alert alert-success shadow-sm border-0">
+    <div class="alert alert-success shadow-sm border-0 mb-4">
         Welcome back, <span class="fw-bold">{{ current_user.username }}</span>!
     </div>
 
     <div class="row g-4">
-        <!-- Book Appointment Card -->
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center p-5">
                     <h5 class="card-title fw-bold text-primary">Book Appointment</h5>
                     <p class="card-text text-muted">Find the right specialist for you.</p>
-                    <!-- Placeholder button for next milestone -->
                     <button class="btn btn-primary mt-3">Book Now</button>
                 </div>
             </div>
         </div>
 
-        <!-- Medical History Card -->
         <div class="col-md-6">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center p-5">
                     <h5 class="card-title fw-bold text-success">Medical History</h5>
                     <p class="card-text text-muted">View your past visits and prescriptions.</p>
-                    <!-- Placeholder button for next milestone -->
-                    <button class="btn btn-outline-success mt-3">View Records</button>
+                    <a href="{{ url_for('patient_history', patient_id=current_user.id) }}" class="btn btn-outline-success mt-3">View Records</a>
                 </div>
             </div>
         </div>

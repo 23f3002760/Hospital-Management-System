@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            
+            <div class="mb-3">
+                <a href="{{ url_for('doctor_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                    &larr; Back to Dashboard
+                </a>
+            </div>
+
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <div class="card-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-1">Doctor's Availability</h3>
+                        <p class="mb-0 opacity-75 small">Manage your time slots for the next 7 days</p>
+                    </div>
+                    <div>
+                        <span class="badge bg-white text-primary fs-6 px-3 py-2 rounded-pill shadow-sm">
+                            Dr. {{ current_user.username }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body p-5">
+                    <form method="POST" action="{{ url_for('doctor_availability') }}">
+                        
+                        <div class="row mb-3 text-center fw-bold text-muted text-uppercase small">
+                            <div class="col-4">Date</div>
+                            <div class="col-4">Morning Slot</div>
+                            <div class="col-4">Evening Slot</div>
+                        </div>
+
+                        {% for day in days %}
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4">
+                                <div class="p-3 bg-light border rounded text-center fw-bold text-dark">
+                                    {{ day }}
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <input type="checkbox" class="btn-check" id="morning-{{ loop.index }}" name="slots" value="{{ day }}_morning" checked>
+                                <label class="btn btn-outline-success w-100 p-3 fw-bold" for="morning-{{ loop.index }}">
+                                    08:00 - 12:00 am
+                                </label>
+                            </div>
+
+                            <div class="col-4">
+                                <input type="checkbox" class="btn-check" id="evening-{{ loop.index }}" name="slots" value="{{ day }}_evening">
+                                <label class="btn btn-outline-evening w-100 p-3 fw-bold" for="evening-{{ loop.index }}">
+                                    04:00 - 09:00 pm
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="mt-5 d-flex justify-content-end align-items-center">
+                            <div class="text-end me-4 text-muted small">
+                                Select time slots for<br>morning and evening.
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg px-5 fw-bold rounded-3">
+                                Save
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -5,17 +5,13 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             
-            <!-- Navigation -->
             <div class="mb-3">
-                <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
-                    <i class="bi bi-arrow-left"></i> &larr; Back to Dashboard
+                <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-muted fw-bold small">&larr; Back to Dashboard
                 </a>
             </div>
 
-            <!-- Main Card -->
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
                 
-                <!-- Attractive Header with Brand Blue -->
                 <div class="card-header bg-primary text-white p-4 text-center">
                     <h3 class="mb-1 fw-bold">Register New Doctor</h3>
                     <p class="mb-0 opacity-75 small">Create a profile for a medical specialist</p>
@@ -24,25 +20,21 @@
                 <div class="card-body p-5 bg-white">
                     <form method="POST" action="{{ url_for('add_doctor') }}">
                         
-                        <!-- Full Name (Floating Label) -->
                         <div class="form-floating mb-3">
                             <input type="text" name="username" class="form-control bg-light border-0" id="floatingName" placeholder="Dr. Name" required>
                             <label for="floatingName" class="text-muted">Doctor's Full Name</label>
                         </div>
 
-                        <!-- Email (Floating Label) -->
                         <div class="form-floating mb-3">
                             <input type="email" name="email" class="form-control bg-light border-0" id="floatingEmail" placeholder="name@example.com" required>
                             <label for="floatingEmail" class="text-muted">Email Address</label>
                         </div>
 
-                        <!-- Password (Floating Label) -->
                         <div class="form-floating mb-3">
                             <input type="password" name="password" class="form-control bg-light border-0" id="floatingPass" placeholder="Password" required>
                             <label for="floatingPass" class="text-muted">Temporary Password</label>
                         </div>
 
-                        <!-- Department (Floating Label) -->
                         <div class="form-floating mb-4">
                             <select name="department_id" class="form-select bg-light border-0" id="floatingDept" required>
                                 <option value="" disabled selected>Select Specialization</option>
@@ -53,9 +45,7 @@
                             <label for="floatingDept" class="text-muted">Department</label>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="d-grid gap-2">
-                            <!-- Uses Brand Green for Success Action -->
                             <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm py-3">
                                 Create Profile
                             </button>
@@ -63,7 +53,6 @@
                     </form>
                 </div>
                 
-                <!-- Footer area inside card -->
                 <div class="card-footer bg-light text-center py-3 border-0">
                     <small class="text-muted">The doctor will be able to log in immediately.</small>
                 </div>
