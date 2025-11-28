@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(20), nullable=False) # admin, doctor, patient
     phone_number = db.Column(db.String(15), nullable=True)
     
+    # NEW: Status field for Blacklisting
+    is_active_user = db.Column(db.Boolean, default=True) 
+    
     # Specific for Doctors (Foreign Key to Department)
     # This will be NULL for Patients and Admins as they have no department
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)

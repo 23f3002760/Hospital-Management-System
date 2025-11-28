@@ -1,8 +1,14 @@
 :root {
-    --brand-blue:   #005D8E;
-    --brand-green:  #00A651;
+    /* Updated Colors per Request */
+    --brand-blue:   #0974A7;  /* New Professional Blue */
+    --brand-dark-blue: #015890; /* For Hover States */
+    --brand-green:  #00B06F;  /* New Professional Green */
+    
     --brand-dark:   #2c3e50;
     --bg-soft:      #f4f7f6;
+    
+    /* New Edit Button Color - Using a neutral/light primary */
+    --brand-edit: #FAD10A; /* A clean, modern yellow */ 
 }
 
 body {
@@ -31,9 +37,10 @@ h1, h2, h3, h4, h5, h6,
     text-decoration: none;
 }
 
+/* Logo Text Styles */
 .brand-sterling {
     font-family: "Noto Serif", serif;
-    color: var(--brand-blue);
+    color: var(--brand-blue); /* Uses the new #0974A7 */
     font-weight: 700;
     font-size: 1.8rem;
     letter-spacing: -0.5px;
@@ -41,7 +48,7 @@ h1, h2, h3, h4, h5, h6,
 
 .brand-hospitals {
     font-family: "Montserrat", sans-serif;
-    color: var(--brand-green);
+    color: var(--brand-green); /* Uses the new #00B06F */
     font-weight: 600;
     font-size: 0.9rem;
     text-transform: uppercase;
@@ -50,6 +57,7 @@ h1, h2, h3, h4, h5, h6,
     padding-top: 5px;
 }
 
+/* Navigation Links */
 .nav-link {
     color: var(--brand-dark) !important;
     font-weight: 600;
@@ -62,29 +70,85 @@ h1, h2, h3, h4, h5, h6,
     color: var(--brand-blue) !important;
 }
 
+/* ======= BUTTONS & THEME OVERRIDES ======= */
+
 /* Logout hover keep white */
 .btn-danger:hover {
     color: #fff !important;
 }
 
+/* Primary Color (Blue) */
 .btn-primary,
 .bg-primary {
     background-color: var(--brand-blue) !important;
     border-color: var(--brand-blue) !important;
 }
 
+.btn-primary:hover {
+    background-color: var(--brand-dark-blue) !important;
+    border-color: var(--brand-dark-blue) !important;
+}
+
+.text-primary {
+    color: var(--brand-blue) !important;
+}
+
+.btn-outline-primary {
+    color: var(--brand-blue);
+    border-color: var(--brand-blue);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-blue);
+    color: white;
+}
+
+/* Success Color (Green) */
 .btn-success,
 .bg-success {
     background-color: var(--brand-green) !important;
     border-color: var(--brand-green) !important;
 }
 
+.btn-success:hover {
+    background-color: #008f5a !important; /* Slightly darker shade */
+    border-color: #008f5a !important;
+}
+
+.text-success {
+    color: var(--brand-green) !important;
+}
+
+.btn-outline-success {
+    color: var(--brand-green);
+    border-color: var(--brand-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--brand-green);
+    color: white;
+}
+
+/* Custom Edit Button (Yellow/Warning replacement) */
+.btn-edit {
+    color: var(--brand-dark);
+    background-color: var(--brand-edit);
+    border-color: var(--brand-edit);
+}
+.btn-edit:hover {
+    color: var(--brand-dark);
+    background-color: #d8b209; /* Darker edit yellow on hover */
+    border-color: #d8b209;
+}
+
+/* Card Styling */
 .card {
     border: none;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
+/* Footer */
 footer {
     background-color: white;
     border-top: 1px solid #eee;
