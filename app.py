@@ -119,22 +119,36 @@ def admin_dashboard():
 
     search = request.args.get('search', '').strip()
     
-    # Base queries
+    # Queries
     docs = User.query.filter_by(role='doctor')
     pats = User.query.filter_by(role='patient')
 
-    # Simplified Search Logic
     if search:
         search_filter = or_(User.username.ilike(f'%{search}%'), User.email.ilike(f'%{search}%'))
         docs = docs.filter(search_filter)
         pats = pats.filter(search_filter)
 
+    all_appointments = Appointment.query.all()
+    departments = Department.query.all()
+
+    # --- CHART DATA: Doctors per Department ---
+    dept_names = []
+    dept_counts = []
+    for dept in departments:
+        count = User.query.filter_by(department_id=dept.id, role='doctor').count()
+        if count > 0: # Only show active departments
+            dept_names.append(dept.name)
+            dept_counts.append(count)
+
     return render_template('admin_dashboard.html', 
                            doctors=docs.all(), 
                            patients=pats.all(), 
-                           departments=Department.query.all(), 
-                           appointments=Appointment.query.all(),
-                           total_appointments=Appointment.query.count())
+                           departments=departments, 
+                           appointments=all_appointments,
+                           total_appointments=len(all_appointments),
+                           # Pass Chart Data
+                           dept_names=dept_names,
+                           dept_counts=dept_counts)
 
 @app.route('/add_doctor', methods=['GET', 'POST'])
 @login_required
