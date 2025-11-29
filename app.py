@@ -3,8 +3,10 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from sqlalchemy import or_
 from datetime import datetime, timedelta
 from models import db, User, Department, Appointment, Treatment, DoctorAvailability
+from flask_restful import Resource, Api, reqparse, fields, marshal_with
 
 app = Flask(__name__) 
+api = Api(app)
 
 # --- CONFIGURATION ---
 app.config['SECRET_KEY'] = 'Hari'
@@ -311,27 +313,50 @@ def book_appointment(doctor_id):
     doctor = db.session.get(User, doctor_id)
     
     if request.method == 'POST':
-        # Simplified Time Logic
-        time_str = '09:00' if request.form.get('slot') == 'Morning' else '16:00'
+        # 1. Parse Data
+        date_str = request.form.get('date')
+        slot_type = request.form.get('slot')
         
+        appt_date = datetime.strptime(date_str, DATE_FMT).date()
+        time_str = '09:00' if slot_type == 'Morning' else '16:00'
+        appt_time = datetime.strptime(time_str, '%H:%M').time()
+        
+        # --- COLLISION CHECK START ---
+        # Query the DB to see if this slot is taken
+        existing_appt = Appointment.query.filter_by(
+            doctor_id=doctor_id,
+            appointment_date=appt_date,
+            appointment_time=appt_time,
+            status='Scheduled' # Only block if it is currently scheduled (not cancelled)
+        ).first()
+
+        if existing_appt:
+            # If we find a match, stop! Don't save.
+            flash('Sorry, that slot was just booked by someone else.', 'danger')
+            return redirect(url_for('book_appointment', doctor_id=doctor_id))
+        # --- COLLISION CHECK END ---
+
+        # 2. Save New Appointment (Only happens if check passes)
         new_appt = Appointment(
             patient_id=current_user.id,
             doctor_id=doctor_id,
-            appointment_date=datetime.strptime(request.form.get('date'), DATE_FMT).date(),
-            appointment_time=datetime.strptime(time_str, '%H:%M').time(),
+            appointment_date=appt_date,
+            appointment_time=appt_time,
             status='Scheduled'
         )
         db.session.add(new_appt)
         db.session.commit()
-        flash('Booked!', 'success')
+        
+        flash('Appointment booked successfully!', 'success')
         return redirect(url_for('patient_dashboard'))
     
+    # GET: Show available slots
     availabilities = DoctorAvailability.query.filter(
         DoctorAvailability.doctor_id == doctor_id, 
         DoctorAvailability.available_date >= datetime.today().date()
     ).order_by(DoctorAvailability.available_date).all()
     
-    return render_template('book_appointment.html', doctor=doctor, availabilities=availabilities)
+    return render_template('book_appointment.html', doctor=doctor, availabilities=availabilities)   
 
 @app.route('/appointment/<int:appointment_id>/cancel')
 @login_required
@@ -369,6 +394,7 @@ def reschedule_appointment(appointment_id):
         new_time = datetime.strptime(time_str, '%H:%M').time()
 
         # 3. Check for Double Booking
+        # We check if *another* appointment exists at this same time
         collision = Appointment.query.filter_by(
             doctor_id=doctor.id,
             appointment_date=new_date,
@@ -399,11 +425,103 @@ def reschedule_appointment(appointment_id):
 @app.route('/appointment/<int:appointment_id>/complete')
 @login_required
 def complete_appointment(appointment_id):
-    appt = db.session.get(Appointment, appointment_id)
-    if appt and current_user.role == 'doctor' and appt.doctor_id == current_user.id:
-        appt.status = 'Completed'
-        db.session.commit()
+    # ... (Your existing complete_appointment logic) ...
     return redirect(url_for('doctor_dashboard'))
+
+# 1. Output Format
+resource_fields = {
+    'id': fields.Integer,
+    'doctor_name': fields.String(attribute='doctor_ref.username'),
+    'patient_name': fields.String(attribute='patient_ref.username'),
+    'date': fields.String(attribute=lambda x: x.appointment_date.strftime('%Y-%m-%d')),
+    'time': fields.String(attribute=lambda x: x.appointment_time.strftime('%H:%M')),
+    'status': fields.String
+}
+
+# 2. Input Parser
+parser = reqparse.RequestParser()
+parser.add_argument('doctor_id', type=int, help='Doctor ID is required')
+parser.add_argument('patient_id', type=int, help='Patient ID is required')
+parser.add_argument('date', type=str, help='Date (YYYY-MM-DD)')
+parser.add_argument('slot', type=str, help='Slot (Morning/Evening)')
+parser.add_argument('status', type=str, help='Status (Scheduled/Cancelled)')
+
+class AppointmentAPI(Resource):
+    # GET: View all appointments
+    @marshal_with(resource_fields)
+    def get(self):
+        return Appointment.query.all()
+
+    # POST: Book a new appointment
+    def post(self):
+        args = parser.parse_args()
+        
+        # 1. Parse Date & Time
+        try:
+            appt_date = datetime.strptime(args['date'], '%Y-%m-%d').date()
+            time_str = '09:00' if args['slot'] == 'Morning' else '16:00'
+            appt_time = datetime.strptime(time_str, '%H:%M').time()
+        except ValueError:
+            return {'message': 'Invalid date format. Use YYYY-MM-DD'}, 400
+
+        # 2. Collision Check
+        existing = Appointment.query.filter_by(
+            doctor_id=args['doctor_id'],
+            appointment_date=appt_date,
+            appointment_time=appt_time,
+            status='Scheduled'
+        ).first()
+
+        if existing:
+            return {'message': 'Slot already booked.'}, 409
+
+        # 3. Save
+        new_appt = Appointment(
+            patient_id=args['patient_id'],
+            doctor_id=args['doctor_id'],
+            appointment_date=appt_date,
+            appointment_time=appt_time,
+            status='Scheduled'
+        )
+        db.session.add(new_appt)
+        db.session.commit()
+        return {'message': 'Appointment created successfully'}, 201
+
+    # PUT: Update (Reschedule/Status)
+    def put(self, appointment_id):
+        args = parser.parse_args()
+        appt = db.session.get(Appointment, appointment_id)
+        
+        if not appt:
+            return {'message': 'Appointment not found'}, 404
+
+        if args['status']:
+            appt.status = args['status']
+            
+        if args['date'] and args['slot']:
+            try:
+                appt.appointment_date = datetime.strptime(args['date'], '%Y-%m-%d').date()
+                time_str = '09:00' if args['slot'] == 'Morning' else '16:00'
+                appt.appointment_time = datetime.strptime(time_str, '%H:%M').time()
+            except ValueError:
+                return {'message': 'Invalid date format'}, 400
+
+        db.session.commit()
+        return {'message': 'Appointment updated'}, 200
+
+    # DELETE: Remove
+    def delete(self, appointment_id):
+        appt = db.session.get(Appointment, appointment_id)
+        if not appt:
+            return {'message': 'Appointment not found'}, 404
+            
+        db.session.delete(appt)
+        db.session.commit()
+        return {'message': 'Appointment deleted'}, 204
+
+# Register the Resources
+api.add_resource(AppointmentAPI, '/api/appointments', endpoint='appointments')
+api.add_resource(AppointmentAPI, '/api/appointments/<int:appointment_id>', endpoint='appointment')
 
 if __name__ == "__main__":
     with app.app_context():
