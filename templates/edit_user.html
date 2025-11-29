@@ -1,51 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-header bg-primary text-white text-center p-3">
-                <h4 class="mb-0">
-                    {% if user.role == 'doctor' %}
-                        Edit Doctor Detail
-                    {% elif user.role == 'patient' %}
-                        Edit Patient Detail
-                    {% else %}
-                        Edit User Details
-                    {% endif %}
-                </h4>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="mb-3">
+                {% if current_user.role == 'patient' %}
+                    <a href="{{ url_for('patient_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% elif current_user.role == 'doctor' %}
+                    <a href="{{ url_for('doctor_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none text-muted fw-bold small">
+                        &larr; Back to Dashboard
+                    </a>
+                {% endif %}
             </div>
-            <div class="card-body p-4">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label text-muted fw-bold">Username</label>
-                        <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-muted fw-bold">Email</label>
-                        <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
-                    </div>
-                    
-                    {% if user.role == 'doctor' %}
-                    <div class="mb-4">
-                        <label class="form-label text-muted fw-bold">Department</label>
-                        <select name="department_id" class="form-select">
-                            {% for dept in departments %}
-                                <option value="{{ dept.id }}" {% if user.department_id == dept.id %}selected{% endif %}>
-                                    {{ dept.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    {% endif %}
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary fw-bold">Update User</button>
-                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
-                    </div>
-                </form>
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                
+                <div class="card-header bg-primary text-white p-4 text-center">
+                    <h3 class="mb-1 fw-bold">Edit Profile</h3>
+                    <p class="mb-0 opacity-75 small">Update your personal information</p>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <form method="POST">
+                        
+                        <div class="text-center mb-4">
+                            <span class="badge bg-light text-primary border rounded-pill px-3 py-2">
+                                Role: {{ user.role|capitalize }}
+                            </span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control bg-light border-0" id="floatingName" 
+                                   placeholder="Username" value="{{ user.username }}" required>
+                            <label for="floatingName" class="text-muted">Full Name</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="email" name="email" class="form-control bg-light border-0" id="floatingEmail" 
+                                   placeholder="name@example.com" value="{{ user.email }}" required>
+                            <label for="floatingEmail" class="text-muted">Email Address</label>
+                        </div>
+
+                        {% if current_user.role == 'admin' and user.role == 'doctor' %}
+                        <div class="form-floating mb-4">
+                            <select name="department_id" class="form-select bg-light border-0" id="floatingDept">
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}" {% if user.department_id == dept.id %}selected{% endif %}>
+                                        {{ dept.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingDept" class="text-muted">Department</label>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm py-3">
+                                Save Changes
+                            </button>
+                            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline-secondary fw-bold py-2 border-0">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
-{% endblock %}  
+{% endblock %}

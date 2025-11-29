@@ -1,33 +1,105 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4 text-success fw-bold">My Health Dashboard</h2>
+<div class="container mt-4">
     
-    <div class="alert alert-success shadow-sm border-0 mb-4">
-        Welcome back, <span class="fw-bold">{{ current_user.username }}</span>!
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold">My Dashboard</h2>
+            <p class="text-muted mb-0">Welcome back, {{ current_user.username }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('edit_user', user_id=current_user.id) }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                Edit Profile
+            </a>
+            <a href="{{ url_for('patient_history', patient_id=current_user.id) }}" class="btn btn-outline-success btn-sm rounded-pill px-3 ms-2">
+                Medical History
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6">
+        
+        <div class="col-md-5">
             <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center p-5">
-                    <h5 class="card-title fw-bold text-primary">Book Appointment</h5>
-                    <p class="card-text text-muted">Find the right specialist for you.</p>
-                    <button class="btn btn-primary mt-3">Book Now</button>
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-calendar-plus me-2"></i>Book Appointment</h5>
+                    <small class="opacity-75">Select a department</small>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for dept in departments %}
+                        <a href="{{ url_for('department_details', department_id=dept.id) }}" class="list-group-item list-group-item-action p-3 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-dark">{{ dept.name }}</span>
+                            <span class="text-primary small fw-bold">View <i class="bi bi-chevron-right"></i></span>
+                        </a>
+                        {% else %}
+                        <div class="p-4 text-center text-muted">
+                            No departments available.
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-7">
             <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center p-5">
-                    <h5 class="card-title fw-bold text-success">Medical History</h5>
-                    <p class="card-text text-muted">View your past visits and prescriptions.</p>
-                    <a href="{{ url_for('patient_history', patient_id=current_user.id) }}" class="btn btn-outline-success mt-3">View Records</a>
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="fw-bold text-success mb-0"><i class="bi bi-clock-history me-2"></i>Upcoming Visits</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-muted small text-uppercase">
+                                <tr>
+                                    <th class="ps-4">Doctor</th>
+                                    <th>Date</th>
+                                    <th class="text-end pe-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appt in appointments %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">Dr. {{ appt.doctor_ref.username }}</div>
+                                        <small class="text-muted">{{ appt.doctor_ref.department.name }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="small fw-bold">{{ appt.appointment_date }}</div>
+                                        <div class="small text-muted">{{ appt.appointment_time }}</div>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        {% if appt.status == 'Scheduled' %}
+                                            <a href="{{ url_for('reschedule_appointment', appointment_id=appt.id) }}" 
+                                               class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2">
+                                                Reschedule
+                                            </a>
+
+                                            <a href="{{ url_for('cancel_appointment', appointment_id=appt.id) }}" 
+                                               class="btn btn-sm btn-outline-danger rounded-pill px-3"
+                                               onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                                Cancel
+                                            </a>
+                                        {% else %}
+                                            <span class="badge bg-secondary rounded-pill">{{ appt.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-5 text-muted">
+                                        No upcoming appointments.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-primary mb-2">Our Medical Departments</h2>
+        <p class="text-muted">Select a specialty to view available doctors and services</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        {% for dept in departments %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                <div class="card-body p-4 text-center">
+                    
+                    <!-- Decorative Icon Circle -->
+                    <div class="mx-auto mb-4 d-flex align-items-center justify-content-center rounded-circle" 
+                         style="width: 80px; height: 80px; background-color: #e6f4fa;">
+                        <i class="bi bi-hospital text-primary fs-1"></i>
+                    </div>
+
+                    <h4 class="card-title fw-bold text-dark mb-3">{{ dept.name }}</h4>
+                    <p class="card-text text-muted small mb-4">
+                        {{ dept.description if dept.description else 'Specialized care provided by our expert medical team.' }}
+                    </p>
+                    
+                    <a href="{{ url_for('department_details', department_id=dept.id) }}" class="btn btn-outline-primary px-4 rounded-pill fw-bold stretched-link">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">
+            <i class="bi bi-exclamation-circle display-4 mb-3 d-block opacity-50"></i>
+            No departments found.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

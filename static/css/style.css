@@ -1,29 +1,35 @@
+/* --- 1. Variables --- */
 :root {
-    /* Original Colors Preserved */
-    --brand-blue:   #0974A7;
+    /* Colors */
+    --brand-blue:      #0974A7; 
     --brand-dark-blue: #015890;
-    --brand-green:  #00B06F;
+    --brand-green:     #00B06F;
+    --brand-dark-green:#008f5a;
     
-    --brand-dark:   #2c3e50;
-    --bg-soft:      #f4f7f6;
+    /* UI Colors */
+    --brand-dark:      #2c3e50;
+    --brand-warning:   #FAD10A;
+    --brand-bg-soft:   #f4f7f6;
     
-    --brand-edit: #FAD10A;
+    /* Fonts */
+    --font-primary:    "Montserrat", sans-serif;
+    --font-serif:      "Noto Serif", serif;
+    --font-text:       "Open Sans", sans-serif;
 }
 
+/* --- 2. Global Reset & Typography --- */
 body {
-    font-family: "Open Sans", sans-serif;
-    background-color: var(--bg-soft);
+    font-family: var(--font-text);
+    background-color: var(--brand-bg-soft);
     color: #333;
 }
 
 h1, h2, h3, h4, h5, h6,
-.btn,
-.navbar-brand,
-.nav-link {
-    font-family: "Montserrat", sans-serif;
+.btn, .navbar-brand, .nav-link, footer {
+    font-family: var(--font-primary);
 }
 
-/* ======= NAVBAR ======= */
+/* --- 3. Navbar & Branding --- */
 .navbar {
     background-color: white !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -37,7 +43,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .brand-sterling {
-    font-family: "Noto Serif", serif;
+    font-family: var(--font-serif);
     color: var(--brand-blue);
     font-weight: 700;
     font-size: 1.8rem;
@@ -45,7 +51,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .brand-hospitals {
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--font-primary);
     color: var(--brand-green);
     font-weight: 600;
     font-size: 0.9rem;
@@ -60,123 +66,111 @@ h1, h2, h3, h4, h5, h6,
     font-weight: 600;
     font-size: 0.95rem;
     margin-left: 15px;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
 }
 
 .nav-link:hover {
     color: var(--brand-blue) !important;
 }
 
-/* ======= BUTTONS & THEME OVERRIDES ======= */
-
-.btn-danger:hover {
-    color: #fff !important;
-}
+/* --- 4. Bootstrap Overrides --- */
 
 /* Primary Color (Blue) */
-.btn-primary,
-.bg-primary {
-    background-color: var(--brand-blue) !important;
-    border-color: var(--brand-blue) !important;
-    color: #fff !important; /* Added to fix dark text on blue button */
-}
+.text-primary { color: var(--brand-blue) !important; }
+.bg-primary   { background-color: var(--brand-blue) !important; color: white !important; }
 
+.btn-primary { 
+    background-color: var(--brand-blue) !important; 
+    border-color: var(--brand-blue) !important;
+    color: white !important;
+}
 .btn-primary:hover {
     background-color: var(--brand-dark-blue) !important;
     border-color: var(--brand-dark-blue) !important;
-}
-
-.text-primary {
-    color: var(--brand-blue) !important;
 }
 
 .btn-outline-primary {
     color: var(--brand-blue);
     border-color: var(--brand-blue);
 }
-
 .btn-outline-primary:hover {
     background-color: var(--brand-blue);
     color: white;
 }
 
 /* Success Color (Green) */
-.btn-success,
-.bg-success {
-    background-color: var(--brand-green) !important;
+.text-success { color: var(--brand-green) !important; }
+.bg-success   { background-color: var(--brand-green) !important; color: white !important; }
+
+.btn-success { 
+    background-color: var(--brand-green) !important; 
     border-color: var(--brand-green) !important;
-    color: #fff !important; /* Added to ensure readability */
+    color: white !important;
 }
-
 .btn-success:hover {
-    background-color: #008f5a !important;
-    border-color: #008f5a !important;
+    background-color: var(--brand-dark-green) !important;
+    border-color: var(--brand-dark-green) !important;
 }
 
-.text-success {
-    color: var(--brand-green) !important;
-}
-
-/* Edit Button */
-.btn-edit {
-    color: var(--brand-dark);
-    background-color: var(--brand-edit);
-    border-color: var(--brand-edit);
-}
-.btn-edit:hover {
-    color: var(--brand-dark);
-    background-color: #d8b209;
-    border-color: #d8b209;
-}
-
-/* Card Styling */
-.card {
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-/* Footer */
-footer {
-    background-color: white;
-    border-top: 1px solid #eee;
-    font-family: "Montserrat", sans-serif;
-}
-
-/* ======= DOCTOR AVAILABILITY TOGGLES ======= */
-
-/* Success/Morning Toggle */
 .btn-outline-success {
     color: var(--brand-green);
     border-color: var(--brand-green);
 }
-
-.btn-outline-success:hover {
-    background-color: #e6fffa !important;
-    color: var(--brand-green) !important;
-    border-color: var(--brand-green) !important;
-}
-
+.btn-outline-success:hover,
 .btn-check:checked + .btn-outline-success {
     background-color: var(--brand-green) !important;
     color: white !important;
     border-color: var(--brand-green) !important;
 }
 
-/* Evening/Blue Toggle */
+/* Danger Color Override */
+.btn-danger:hover { color: white !important; }
+
+/* --- 5. Custom Utilities --- */
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Footer */
+footer {
+    background-color: white;
+    border-top: 1px solid #eee;
+}
+
+/* Appointment Slots (Evening) */
+.text-evening { color: var(--brand-blue) !important; }
+.bg-evening   { background-color: var(--brand-blue) !important; color: white !important; }
+
 .btn-outline-evening {
-    color: var(--brand-dark-blue);
-    border-color: var(--brand-dark-blue);
+    color: var(--brand-blue);
+    border-color: var(--brand-blue);
 }
-
-.btn-outline-evening:hover {
-    background-color: #e3f2fd !important;
-    color: var(--brand-dark-blue) !important;
-    border-color: var(--brand-dark-blue) !important;
-}
-
+.btn-outline-evening:hover,
 .btn-check:checked + .btn-outline-evening {
-    background-color: var(--brand-dark-blue) !important;
+    background-color: var(--brand-blue) !important;
     color: white !important;
-    border-color: var(--brand-dark-blue) !important;
+    border-color: var(--brand-blue) !important;
+}
+
+/* Edit Button */
+.btn-edit {
+    color: var(--brand-dark);
+    background-color: var(--brand-warning);
+    border-color: var(--brand-warning);
+}
+.btn-edit:hover {
+    background-color: #d8b209;
+    border-color: #d8b209;
 }
