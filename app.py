@@ -369,7 +369,6 @@ def reschedule_appointment(appointment_id):
         new_time = datetime.strptime(time_str, '%H:%M').time()
 
         # 3. Check for Double Booking
-        # We check if *another* appointment exists at this same time
         collision = Appointment.query.filter_by(
             doctor_id=doctor.id,
             appointment_date=new_date,
