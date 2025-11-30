@@ -201,22 +201,34 @@ def toggle_status(user_id):
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(user_id):
+    # Permission Check
     if current_user.role != 'admin' and current_user.id != user_id:
         return redirect(url_for('index'))
 
     user = db.session.get(User, user_id)
     
     if request.method == 'POST':
-        user.username = request.form.get('username')
-        user.email = request.form.get('email')
+        new_email = request.form.get('email')
+        new_username = request.form.get('username')
         
+        existing_user = User.query.filter_by(email=new_email).first()
+        
+        # If found, AND it is not the same person we are currently editing
+        if existing_user and existing_user.id != user.id:
+            flash('Error: That email is already in use by another account.', 'danger')
+            return redirect(url_for('edit_user', user_id=user.id))
+
+        user.username = new_username
+        user.email = new_email
+        
+        # Admin updating Doctor Department
         if current_user.role == 'admin' and user.role == 'doctor':
             user.department_id = request.form.get('department_id')
         
         db.session.commit()
-        flash('Updated successfully.', 'success')
+        flash('Profile updated successfully!', 'success')
         
-        # Simple Redirect Logic
+        # Redirect back to appropriate dashboard
         if current_user.role == 'admin': return redirect(url_for('admin_dashboard'))
         if current_user.role == 'doctor': return redirect(url_for('doctor_dashboard'))
         return redirect(url_for('patient_dashboard'))
